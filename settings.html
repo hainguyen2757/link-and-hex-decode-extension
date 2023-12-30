@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings Page</title>
+    <!-- <a href="settings.html">Settings</a> -->
+    <!-- Inline CSS -->
+    <style>
+      body {
+        background-color: #0e0e10;
+        color: #fff; /* Set text color to white for better contrast */
+        font-family: Arial, sans-serif; /* Set a font for better readability */
+        margin-left: 16px;
+      }
+      .notification{
+        color: red;
+        font-weight: bolder;
+        position: absolute;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        opacity: 1;
+        transition: opacity 1s ease-out;
+      }
+      .notification.fade-out {
+  opacity: 0;
+}
+#addLink{
+  width: 40%;
+}
+      .link-box {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+        color: #000;
+        margin-right: 50%;
+      }
+      .link-box span {
+        padding-right: 10px;
+        padding-bottom: 5px;
+        cursor: pointer;
+        display: block;
+        overflow-wrap: break-word;
+      }
+      .link-box button {
+        display: inline-block;
+        outline: 0;
+        cursor: pointer;
+        padding: 5px 16px;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 20px;
+        vertical-align: middle;
+        border: 1px solid;
+        border-radius: 6px;
+        color: #0366d6;
+        background-color: #fafbfc;
+        border-color: #1b1f2326;
+        box-shadow: rgba(27, 31, 35, 0.04) 0px 1px 0px 0px,
+          rgba(255, 255, 255, 0.25) 0px 1px 0px 0px inset;
+        transition: 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+        transition-property: color, background-color, border-color;
+        box-shadow: 2px 2px;
+      }
+      .link-box button:hover {
+          color: #ffffff;
+          background-color: #0366d6;
+          border-color: #1b1f2326;
+          box-shadow: rgba(27, 31, 35, 0.1) 0px 1px 0px 0px,
+            rgba(255, 255, 255, 0.03) 0px 1px 0px 0px inset;
+          transition-duration: 0.1s;
+        }
+        #linksForm{
+          display: flex;
+          align-items: center;
+          margin-top: 10px;
+        }
+        #linksTextarea{
+          margin-right: 5px;
+          margin-left: 5px;
+          width: 39%;
+          height: 80px;
+        }
+        #savedLinksList{
+          display: flex;
+          flex-direction: column-reverse;
+        }
+      /* Add additional styles as needed */
+      .delete-link,
+      .open-incognito,
+      .open-new-tab {
+        margin-right: 5px;
+        padding: 5px 10px;
+        border: 1px solid #ddd;
+        background-color: #e6e6e6;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Saved links</h1>
+
+    <form id="settingsForm">
+      <label for="addLink">Add Link:</label>
+      <input type="text" id="addLink" name="addLink" required />
+      <button type="button" id="saveLinkButton">Save Link</button>
+    </form>
+
+     <!-- Links form -->
+  <form id="linksForm">
+    <label for="linksTextarea">Enter Links:</label>
+    <textarea id="linksTextarea"></textarea>
+    <button type="button" id="processLinksButton">Process Links</button>
+  </form>
+    <h2>Click on link to copy</h2>
+    <ul id="savedLinksList"></ul>
+
+    <!-- <script src="settings.js"></script> -->
+    <script src="settings.js"></script>
+  </body>
+</html>
