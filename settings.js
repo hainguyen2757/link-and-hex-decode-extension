@@ -1,10 +1,9 @@
-chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-    if (message.action === "backgroundToSettings") {
-      console.log("Message from background.js:", message.data);
-      // Call functions or perform actions in settings.js based on the message
+//in mafinest v3 you need to use chrome.runtime.onMessage.addListener to be able to call a function from other scripts (defining action)
+  chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+    if (message.action === 'callUpdateSavedLinksList') {
+      updateSavedLinksList();
     }
   });
-
 // Function to open a saved link in a new tab
 function openInNewTab(link) {
     chrome.tabs.create({
@@ -26,16 +25,19 @@ function copyTextToClipboard(text) {
 // saving links to setting
 function saveLink(link) {
     // Retrieve existing links from storage or initialize an empty array
+    // Get the current date and time
+  var currentDate = new Date();
+  var dateString = currentDate.toLocaleString();
     chrome.storage.local.get({ 'savedLink': [] }, function (result) {
       var savedLinks = result.savedLink;
-
       // Ensure savedLinks is an array
       if (!Array.isArray(savedLinks)) {
         savedLinks = [];
       }
   
       // Add the link to the array
-      savedLinks.push(link);
+      savedLinks.push({ link: link, date: dateString });
+
   
       // Save the updated array back to storage
       chrome.storage.local.set({ 'savedLink': savedLinks });
@@ -52,10 +54,8 @@ function saveLink(link) {
     chrome.storage.local.get('savedLink', function (result) {
       var savedLinks = result.savedLink || [];
       var savedLinksList = document.getElementById('savedLinksList');
-  
       // Clear the existing list
       savedLinksList.innerHTML = '';
-  
       // Populate the list with saved links
       savedLinks.forEach(function (link, index) {
         // Create a list item
@@ -82,14 +82,25 @@ function saveLink(link) {
         newTabButton.textContent = 'Open in New Tab';
         newTabButton.className = 'open-new-tab';
         newTabButton.setAttribute('data-index', index);
-  
+
         // Create a span to display the link
         var linkSpan = document.createElement('span');
+        if (typeof link==='string') {
         linkSpan.textContent = link;
+          
+        }else{
+          linkSpan.textContent = link.link;
+
+        }
         linkSpan.className="copy-text";
   
+        var dateSpan = document.createElement('span');
+        dateSpan.textContent = "Date Added: " + link.date;
+        dateSpan.className = "date-added";
+
         // Append the buttons and link to the linkBox
         linkBox.appendChild(linkSpan);
+        linkBox.appendChild(dateSpan);
         linkBox.appendChild(incognitoButton);
         linkBox.appendChild(newTabButton);
         linkBox.appendChild(deleteButton);
