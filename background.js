@@ -2,10 +2,34 @@ var link = '';
 var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
 var plainText; // Declare a global variable to store the encoded value
 
+
 function isValidURL(url) {
     var urlPattern = new RegExp('^(https?:\\/\\/)?');// protocol)
   
     return urlPattern.test(url);
+  }
+
+  function saveLink(link) {
+    // Retrieve existing links from storage or initialize an empty array
+    chrome.storage.local.get({ 'savedLink': [] }, function (result) {
+      var savedLinks = result.savedLink;
+      chrome.runtime.sendMessage({ action: 'saveLink', link: link });
+
+
+      // Ensure savedLinks is an array
+      if (!Array.isArray(savedLinks)) {
+        savedLinks = [];
+      }
+  
+      // Add the link to the array
+      savedLinks.push(link);
+  
+      // Save the updated array back to storage
+      chrome.storage.local.set({ 'savedLink': savedLinks });
+      // Update the saved links list
+      updateSavedLinksList();
+      
+    });
   }
 
 function convertToStr(cipherText) {

@@ -28,7 +28,6 @@ function saveLink(link) {
     // Retrieve existing links from storage or initialize an empty array
     chrome.storage.local.get({ 'savedLink': [] }, function (result) {
       var savedLinks = result.savedLink;
-      
 
       // Ensure savedLinks is an array
       if (!Array.isArray(savedLinks)) {
