@@ -1,11 +1,18 @@
 var link = "";
 var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
 var plainText; // Declare a global variable to store the encoded value
+var enableDebuglogs = false;
 
 function isValidURL(url) {
   var urlPattern = new RegExp("^(https?:\\/\\/)?"); // protocol)
 
   return urlPattern.test(url);
+}
+
+function log(message) {
+  if (enableDebuglogs) {
+    console.log(message);
+  }
 }
 
 function saveLink(link) {
@@ -35,22 +42,22 @@ function saveLink(link) {
 }
 
 function convertToStr(cipherText) {
-  console.log("cipher text: " + cipherText);
+  log("cipher text: " + cipherText);
   try {
     // 1st check if the link is from nhentai
     if (cipherText.includes(" ") && cipherText.includes("https")) {
-      console.log("Cipher contains blank spaces");
+      log("Cipher contains blank spaces");
       link = cipherText.replace(/\s/g, "");
     } else if (cipherText.length === 6) {
-      console.log("This is nhentai code");
+      log("This is nhentai code");
       link = "https://nhentai.net/g/" + cipherText;
     } else if (cipherText.startsWith("@")) {
       //check if the link is a twitter name
-      console.log("this is twitter link");
+      log("this is twitter link");
       link = "https://twitter.com/" + cipherText.substring(1);
     } else {
       //this is a hex code
-      console.log("this is hex code");
+      log("this is hex code");
       // Step 1: Convert hexadecimal to ASCII
       cipherText = cipherText.replace(/\s/g, "");
       var asciiString = "";
@@ -65,16 +72,16 @@ function convertToStr(cipherText) {
     }
   } catch (error) {
     // If an error occurs during deciphering, direct to a Google search
-    console.log("error is: " + error);
+    log("error is: " + error);
     link = "https://www.google.com/search?q=" + cipherText;
   }
 
-  console.log("Final link:" + link);
+  log("Final link:" + link);
   if (link.includes("https:")) {
-    console.log("Text contain 'https:'");
+    log("Text contain 'https:'");
     return link;
   } else {
-    console.log("Text does not contain 'https:'");
+    log("Text does not contain 'https:'");
     link = "https://www.google.com/search?q=" + cipherText;
     return link;
   }
@@ -85,9 +92,9 @@ chrome.contextMenus.onClicked.addListener(function (info, tab) {
   var decodedText = convertToStr(info.selectionText);
   var encodedBase64 = btoa(decodedText);
   plainText = encodedBase64; // Store the value in the background context variable
-  console.log(link);
+  log(link);
   var isLink = isValidURL(link);
-  console.log(isLink);
+  log(isLink);
 
   if (isLink) {
     if (

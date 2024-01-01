@@ -47,13 +47,22 @@ function saveLink(link) {
     });
   }
   
-  
+  function saveDataToLocalStorage(data) {
+    localStorage.setItem('myData', JSON.stringify(data));
+  }
   // Function to update the saved links list
   function updateSavedLinksList() {
     // Retrieve saved links from storage
+    
+
     chrome.storage.local.get('savedLink', function (result) {
       var savedLinks = result.savedLink || [];
       var savedLinksList = document.getElementById('savedLinksList');
+      //saving to localstorage
+      //console.log(savedLinks);
+      var myData = { key: savedLinks };
+    saveDataToLocalStorage(myData);
+
       // Clear the existing list
       savedLinksList.innerHTML = '';
       // Populate the list with saved links
@@ -182,7 +191,12 @@ document.getElementById('savedLinksList').addEventListener('click', function (ev
       // Ensure index is within bounds
       if (index >= 0 && index < savedLinks.length) {
         // Open the link in incognito mode
+        //console.log(savedLinks[index].link);
+        if (typeof savedLinks[index]==='string') {
         openInIncognito(savedLinks[index]);
+        }else{
+          openInIncognito(savedLinks[index].link);
+        }
       }
     });
   } else if (event.target.classList.contains('open-new-tab')) {
@@ -196,7 +210,11 @@ document.getElementById('savedLinksList').addEventListener('click', function (ev
       // Ensure index is within bounds
       if (index >= 0 && index < savedLinks.length) {
         // Open the link in a new tab
-        openInNewTab(savedLinks[index]);
+        if (typeof savedLinks[index]==='string') {
+          openInNewTab(savedLinks[index]);
+          }else{
+            openInNewTab(savedLinks[index].link);
+          }
       }
     });
   }
