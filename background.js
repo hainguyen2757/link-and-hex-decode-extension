@@ -106,7 +106,10 @@ function convertToStr(cipherText) {
 
 chrome.contextMenus.onClicked.addListener(function (info, tab) {
   var decodedText = convertToStr(info.selectionText);
-  
+  chrome.storage.local.get(['mycustomUrl'], function(result) {
+    console.log('Value retrieved:', result.mycustomUrl);
+    mycustomUrl = result.mycustomUrl;
+  });
   // var encodedBase64 = btoa(decodedText);
   var utf8Encoded = unescape(encodeURIComponent(decodedText));
   

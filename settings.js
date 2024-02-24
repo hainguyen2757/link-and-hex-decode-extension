@@ -18,10 +18,26 @@ document.getElementById("processURLButton").addEventListener("click", function (
   var customUrl = document.getElementById("customUrl").value;
   saveCustomUrl(customUrl);
   alert("Custom URL saved successfully!");
-    chrome.storage.local.set({ mycustomUrl: customUrl }, function() {//key mycustomURL, value customURL
-    console.log('URL changed to '+customUrl);
+  
+  chrome.storage.local.set({ mycustomUrl: customUrl }, function() {
+    console.log('URL changed to ' + customUrl);
+    updateUrlLabel(customUrl); // Call updateUrlLabel here with the updated URL
   });
 });
+
+function updateUrlLabel(customUrl) {
+  var labelElement = document.getElementById("urlLabel");
+  labelElement.textContent = "Custom URL for hentaivn: " + customUrl;
+}
+
+// Call updateUrlLabel on page load to update the label with the initial value
+chrome.storage.local.get(['mycustomUrl'], function(result) {
+  var initialCustomUrl = result.mycustomUrl;
+  if (initialCustomUrl) {
+    updateUrlLabel(initialCustomUrl);
+  }
+});
+
 
 
 var deletedLinksHistory = [];
