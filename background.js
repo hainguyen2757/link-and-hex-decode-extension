@@ -1,19 +1,17 @@
 var link = "";
 var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
 var plainText; // Declare a global variable to store the encoded value
-var enableDebuglogs = false;
 
 function isValidURL(url) {
   var urlPattern = new RegExp("^(https?:\\/\\/)?"); // protocol)
-
   return urlPattern.test(url);
 }
-
-function log(message) {
-  if (enableDebuglogs) {
-    console.log(message);
-  }
-}
+var mycustomUrl="";
+// Retrieving data from local storage
+chrome.storage.local.get(['mycustomUrl'], function(result) {
+  console.log('Value retrieved:', result.mycustomUrl);
+  mycustomUrl = result.mycustomUrl;
+});
 
 function saveLink(link) {
   // Retrieve existing links from storage or initialize an empty array
@@ -42,47 +40,65 @@ function saveLink(link) {
 }
 
 function convertToStr(cipherText) {
-  log("cipher text: " + cipherText);
+  console.log("cipher text: " + cipherText);
   try {
     // 1st check if the link is from nhentai
-    if (cipherText.includes(" ") && cipherText.includes("https")) {
-      log("Cipher contains blank spaces");
-      link = cipherText.replace(/\s/g, "");
-    } else if (cipherText.length === 6) {
-      log("This is nhentai code");
+    if (cipherText.includes("https")) {
+      console.log("Cipher is a link with https");
+      if (cipherText.includes(" ") && cipherText.includes("https")) {
+        console.log("cipher has blank space");
+        link = cipherText.replace(/\s/g, "");
+      }else{
+        console.log("cipher has ()");
+        link = cipherText.replace(/[()]/g, '');
+      }
+    } else if (cipherText.length === 6 && !isNaN(cipherText)) {
+      console.log("This is nhentai code");
       link = "https://nhentai.net/g/" + cipherText;
     } else if (cipherText.startsWith("@")) {
       //check if the link is a twitter name
-      log("this is twitter link");
+      console.log("this is twitter link");
       link = "https://twitter.com/" + cipherText.substring(1);
-    } else {
+    }else if (cipherText.length === 5 && !isNaN(cipherText)) {
+      console.log("This is hentaivn code");
+      link = "https://"+mycustomUrl+"/"+cipherText+"-doc-truyen-id.html";
+    } 
+    else {
       //this is a hex code
-      log("this is hex code");
+      console.log("this is hex code: "+cipherText);
+
       // Step 1: Convert hexadecimal to ASCII
-      cipherText = cipherText.replace(/\s/g, "");
+      decodeText = cipherText.replace(/\s/g, "");
       var asciiString = "";
-      for (var i = 0; i < cipherText.length; i += 2) {
+      for (var i = 0; i < decodeText.length; i += 2) {
         asciiString += String.fromCharCode(
-          parseInt(cipherText.substr(i, 2), 16)
+          parseInt(decodeText.substr(i, 2), 16)
         );
       }
 
       // Step 2: URL decode the ASCII string
       link = decodeURIComponent(asciiString);
+      if (link.includes("https")) {
+        console.log("this is a https link: "+link);
+
+      } else {
+        console.log("this is just words: "+cipherText);
+        link=cipherText;
+      }
     }
   } catch (error) {
     // If an error occurs during deciphering, direct to a Google search
-    log("error is: " + error);
+    console.log("error is: " + error);
     link = "https://www.google.com/search?q=" + cipherText;
   }
 
-  log("Final link:" + link);
+  console.log("Final link:" + link);
   if (link.includes("https:")) {
-    log("Text contain 'https:'");
+    console.log("Final link is an URL: "+link);
     return link;
   } else {
-    log("Text does not contain 'https:'");
-    link = "https://www.google.com/search?q=" + cipherText;
+    console.log("Text does not contain 'https:'");
+    link = "https://www.google.com/search?q=" + link;
     return link;
   }
   //      return link;
@@ -90,11 +106,18 @@ function convertToStr(cipherText) {
 
 chrome.contextMenus.onClicked.addListener(function (info, tab) {
   var decodedText = convertToStr(info.selectionText);
-  var encodedBase64 = btoa(decodedText);
+  
+  // var encodedBase64 = btoa(decodedText);
+  var utf8Encoded = unescape(encodeURIComponent(decodedText));
+  
+  // Encode the UTF-8 data using Base64
+  var encodedBase64 = btoa(utf8Encoded);
+
   plainText = encodedBase64; // Store the value in the background context variable
-  log(link);
+
+  console.log(link);
   var isLink = isValidURL(link);
-  log(isLink);
+  console.log(isLink);
 
   if (isLink) {
     if (

@@ -1,0 +1,129 @@
+body {
+  background-color: #0e0e10;
+  color: #fff; /* Set text color to white for better contrast */
+  font-family: Arial, sans-serif; /* Set a font for better readability */
+  margin-left: 1%;
+  margin-right: 1%;
+}
+
+.notification {
+  color: red;
+  font-weight: bolder;
+  position: absolute;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  opacity: 1;
+  transition: opacity 1s ease-out;
+}
+.notification.fade-out {
+  opacity: 0;
+}
+#addLink {
+  width: 39%;
+  margin-left: 18px;
+  height: 25px;
+}
+.container {
+    display: flex;
+    justify-content: space-between;
+  }
+  .links {
+    width: 48%; /* Adjust the width as needed */
+  }
+
+  .deleted-links {
+    width: 48%; /* Adjust the width as needed */
+  }
+.link-box {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  background-color: #1F1F23;
+  /* color: #000; */
+}
+.link-box span {
+  padding-right: 10px;
+  padding-bottom: 5px;
+  cursor: pointer;
+  display: block;
+  overflow-wrap: break-word;
+}
+.linkInput{
+    margin-left: 10px;
+    margin-right: 5px;
+}
+ button {
+  display: inline-block;
+  outline: 0;
+  cursor: pointer;
+  padding: 5px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  vertical-align: middle;
+  border: 1px solid;
+  border-radius: 6px;
+  color: #0366d6;
+  background-color: #fafbfc;
+  border-color: #1b1f2326;
+  box-shadow: rgba(27, 31, 35, 0.04) 0px 1px 0px 0px,
+    rgba(255, 255, 255, 0.25) 0px 1px 0px 0px inset;
+  transition: 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+  transition-property: color, background-color, border-color;
+  box-shadow: 2px 2px;
+}
+ button:hover {
+  color: #ffffff;
+  background-color: #0366d6;
+  border-color: #1b1f2326;
+  box-shadow: rgba(27, 31, 35, 0.1) 0px 1px 0px 0px,
+    rgba(255, 255, 255, 0.03) 0px 1px 0px 0px inset;
+  transition-duration: 0.1s;
+}
+.addinglinks form {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+#linksTextarea {
+  margin-right: 5px;
+  margin-left: 5px;
+  width: 39%;
+  height: 80px;
+}
+#savedLinksList {
+  display: flex;
+  flex-direction: column-reverse;
+}
+#clearHistoryButton{
+    margin-top: 5px;
+}
+/* Add additional styles as needed */
+.delete-link,
+.open-incognito,
+.open-new-tab {
+  margin-right: 5px;
+  padding: 5px 10px;
+  border: 1px solid #ddd;
+  background-color: #e6e6e6;
+  cursor: pointer;
+}
+.readonly-textarea {
+  border: 1px solid #ccc;
+  padding: 5px;
+  height: 150px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+}
+
+#filterOptions {
+  display: none;
+  
+  top: 30px;
+  right: 0;
+  background-color: #000000;
+  border: 1px solid #ccc;
+  padding: 10px;
+  z-index: 1000;
+}
