@@ -59,7 +59,7 @@ function convertToStr(cipherText) {
       //check if the link is a twitter name
       console.log("this is twitter link");
       link = "https://twitter.com/" + cipherText.substring(1);
-    }else if (cipherText.length === 5 && !isNaN(cipherText)) {
+    }else if (cipherText.length < 6 && !isNaN(cipherText)) {
       console.log("This is hentaivn code");
       link = "https://"+mycustomUrl+"/"+cipherText+"-doc-truyen-id.html";
     } 
