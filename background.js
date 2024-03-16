@@ -133,10 +133,28 @@ chrome.contextMenus.onClicked.addListener(function (info, tab) {
         url: link,
       });
     } else {
-      chrome.windows.create({
-        url: link,
-        incognito: true,
-      });
+      chrome.windows.getAll({ populate: true }, function (windows) {
+        let incognitoWindow = null;
+        for (let i = 0; i < windows.length; i++) {
+            if (windows[i].incognito) {
+                incognitoWindow = windows[i];
+                break;
+            }
+        }
+
+        if (incognitoWindow) {
+            chrome.tabs.create({
+                url: link,
+                windowId: incognitoWindow.id
+            });
+        } else {
+            // If no incognito window is open, create a new incognito window
+            chrome.windows.create({
+                url: link,
+                incognito: true,
+            });
+        }
+    });
     }
   } else {
     var str = info.selectionText;
